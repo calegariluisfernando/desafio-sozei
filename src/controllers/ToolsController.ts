@@ -1,6 +1,5 @@
 import e, { Request, Response } from "express";
 import { getCustomRepository, In } from "typeorm";
-import { Tag } from "../models/Tag";
 import { TagsRepository } from "../repositories/TagsRepository";
 import { ToolsRepository } from "../repositories/ToolsRepository";
 
