@@ -34,7 +34,7 @@ class TokenGenerator {
             const decoded  = jwt.verify(token, process.env.SECRET_KEY);
             
             // Verificar se token esta na lista negra.
-            return decoded !== 'undefined';
+            return true;
         } catch(err) {
 
             if (err.expiredAt) {

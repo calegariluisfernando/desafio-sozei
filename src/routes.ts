@@ -23,7 +23,6 @@ router.use('/', (request: Request, response: Response, next: NextFunction) => {
         }
 
         const checkedToken = TokenGenerator.verify(authorization);
-
         if (checkedToken !== true) {
 
             if (typeof checkedToken === 'string') {
