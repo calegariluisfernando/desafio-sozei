@@ -23,14 +23,16 @@ router.use('/', (request: Request, response: Response, next: NextFunction) => {
         }
 
         const checkedToken = TokenGenerator.verify(authorization);
-        if (typeof checkedToken === 'string') {
 
-            throw new AppError(checkedToken, 401);
-        }
+        if (checkedToken !== true) {
 
-        if (checkedToken === false) {
+            if (typeof checkedToken === 'string') {
 
-            throw new AppError('Access denied!', 401);
+                throw new AppError(checkedToken, 401);
+            } else {
+    
+                throw new AppError('Access denied!', 401);
+            }
         }
     }
 

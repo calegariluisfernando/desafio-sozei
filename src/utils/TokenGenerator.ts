@@ -14,7 +14,6 @@ class TokenGenerator {
     static sign(payload: PayloadData): string {
 
         const { id, uuid, expiration } = payload;
-        // const hoursExpirations = 0;
         const hoursExpirations = expiration ? expiration : parseInt(process.env.DEFAULT_VALUE_TOKEN_EXPIRATION_TIME);
 
         return jwt.sign({ id, uuid }, process.env.SECRET_KEY, 
