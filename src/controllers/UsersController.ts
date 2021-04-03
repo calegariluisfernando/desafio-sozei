@@ -10,15 +10,14 @@ interface ResquestCreateData {
     name: string,
     email: string;
     password: string;
-    status: number;
+    isActive: false | true;
 }
 
 class UsersController {
 
     async create(request: Request, response: Response) {
 
-        let { name, email, password, status }:ResquestCreateData = request.body;
-        password = Helpers.md5(password);
+        const { name, email, password, isActive }:ResquestCreateData = request.body;
         const userRespository = getCustomRepository(UsersRepository);
 
         const userAlreadyExists = await userRespository.findOne({ email });
@@ -28,7 +27,7 @@ class UsersController {
             throw new AppError('User Already existis!');
         }
 
-        const user = userRespository.create({ name, email, password, status });
+        const user = userRespository.create({ name, email, password, isActive });
 
         await userRespository.save(user);
 

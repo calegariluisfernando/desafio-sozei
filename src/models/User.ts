@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { v4 } from "uuid";
 import { Helpers } from "../utils/Helpers";
 
@@ -9,7 +9,7 @@ class User {
     public readonly id: number;
 
     @Column()
-    public readonly uuid: string;
+    public uuid: string;
 
     @Column()
     public name: string;
@@ -21,10 +21,18 @@ class User {
     public password: string;
 
     @Column()
-    public status: number;
+    public isActive: boolean;
 
     @CreateDateColumn()
     public created_at: Date;
+
+    @BeforeInsert()
+    generatePasswordHash() {
+
+        this.uuid = v4();
+        this.password =  Helpers.generateMd5(this.password);
+
+    }
 
 }
 

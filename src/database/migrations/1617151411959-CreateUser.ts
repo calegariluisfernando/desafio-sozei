@@ -35,11 +35,10 @@ export class CreateUser1617151411959 implements MigrationInterface {
                     length: '32',
                     isNullable: false,
                 }, {
-                    name: 'status',
-                    type: 'tinyint',
-                    unsigned: true,
+                    name: 'isActive',
+                    type: 'boolean',
                     isNullable: false,
-                    default: 1
+                    default: true
                 }, {
                     name: 'created_at',
                     type: 'timestamp',

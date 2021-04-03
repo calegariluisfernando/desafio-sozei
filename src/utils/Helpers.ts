@@ -1,13 +1,10 @@
-import * as crypto from 'crypto';
+import { createHash } from 'crypto';
 
 class Helpers {
 
-    static md5(contents: string) {
+    static generateMd5(text: string): string {
 
-        return crypto
-            .createHash('md5')
-            .update(contents)
-            .digest('hex');
+        return createHash('md5').update(text).digest('hex');
     }
 }
 
