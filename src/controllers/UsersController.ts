@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import { AppError } from "../error/AppError";
 import { UsersRepository } from "../repositories/UsersRepository";
-import { Helpers } from "../utils/Helpers";
 
 interface ResquestCreateData {
 
@@ -32,6 +31,26 @@ class UsersController {
         await userRespository.save(user);
 
         return response.status(201).json(user);
+    }
+
+    async show(request: Request, response: Response) {
+        
+        const usersRepository = getCustomRepository(UsersRepository);
+        const all = await usersRepository.find();
+
+        return response.json(all);
+    }
+
+    async delete(request: Request, response: Response) {
+
+        const { id } = request.params;
+        const usersRepository = getCustomRepository(UsersRepository);
+
+        const retorno = await usersRepository.findByIds([id]);
+
+        await usersRepository.remove(retorno);
+
+        return response.status(204).json(retorno);
     }
 }
 

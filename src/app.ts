@@ -1,14 +1,18 @@
-import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
+import 'reflect-metadata';
 import createConnection from './database';
-import { router } from './routes';
 import { AppError } from './error/AppError';
+import { middleware } from './middlewares';
+import { router } from './routes';
 
 createConnection();
 const app = express();
 
+var blackListToken = [];
+
 app.use(express.json());
+app.use(middleware);
 app.use(router);
 
 app.use((err: Error, request: Request,  response: Response, _next: NextFunction) => {
@@ -28,4 +32,5 @@ app.use((err: Error, request: Request,  response: Response, _next: NextFunction)
     });
 });
 
-export { app }
+export { app, blackListToken };
+

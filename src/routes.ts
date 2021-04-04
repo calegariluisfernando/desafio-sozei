@@ -1,45 +1,15 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { AuthController } from './controllers/AuthController';
 import { ToolsController } from './controllers/ToolsController';
 import { UsersController } from './controllers/UsersController';
-import { AppError } from './error/AppError';
-import { TokenGenerator } from './utils/TokenGenerator';
 
 const router = Router();
 
-router.get('/', (req, res) => res.json({ 'home': 'Hello World!' }));
-
-router.use('/', (request: Request, response: Response, next: NextFunction) => {
-
-    const { path } = request;   
-    const dmzPaths = process.env.DMZ_ROUTES.split(',').map(p => p.trim());
-
-    if (!dmzPaths.includes(path)) {
-
-        const { authorization } = request.headers;
-        if (typeof authorization === 'undefined') {
-
-            throw new AppError('Access denied!', 401);
-        }
-
-        const checkedToken = TokenGenerator.verify(authorization);
-        if (checkedToken !== true) {
-
-            if (typeof checkedToken === 'string') {
-
-                throw new AppError(checkedToken, 401);
-            } else {
-    
-                throw new AppError('Access denied!', 401);
-            }
-        }
-    }
-
-    next();
-});
+router.get('/', (req: Request, res: Response) => res.json({ 'home': 'Hello World!' }));
 
 const authController = new AuthController();
 router.post('/auth/login', authController.login);
+router.post('/auth/logout', authController.logout);
 
 const toolsController = new ToolsController();
 router.get('/tools', toolsController.show);
@@ -48,5 +18,8 @@ router.delete('/tools/:id', toolsController.delete);
 
 const usersController = new UsersController();
 router.post('/users', usersController.create);
+router.get('/users', usersController.show);
+router.delete('/users/:id', usersController.delete);
 
 export { router };
+

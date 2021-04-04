@@ -9,6 +9,12 @@ interface PayloadData {
     expiration?: number;
 }
 
+interface TokenInterface {
+    status: boolean;
+    token?: object | string;
+    message?: string;
+}
+
 class TokenGenerator {
 
     static sign(payload: PayloadData): string {
@@ -25,8 +31,9 @@ class TokenGenerator {
         );
     }
 
-    static verify(token: string): boolean | string {
+    static verify(token: string): TokenInterface {
 
+        let tokenData: TokenInterface;
         try {
             
             // Verificar se token é valido
@@ -34,15 +41,17 @@ class TokenGenerator {
             const decoded  = jwt.verify(token, process.env.SECRET_KEY);
             
             // Verificar se token esta na lista negra.
-            return true;
+            tokenData = { status: true, token: decoded };
+            return tokenData;
         } catch(err) {
 
+            tokenData = { status: false };
             if (err.expiredAt) {
                 
-                return 'Expired Token!';
+                tokenData = { status: false, message: 'Expired Token!' };
             }
 
-            return false
+            return tokenData
         }
         
         
