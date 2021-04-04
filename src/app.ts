@@ -13,7 +13,7 @@ const app = express();
 var activeTokens = [];
 var blackListToken = [];
 
-// 1 Hora
+// **************************   1 Hora
 const timeCheckActiveTokens = 1000 * 60 * 60;
 setInterval(() => {
 
@@ -28,7 +28,7 @@ setInterval(() => {
     
 }, timeCheckActiveTokens);
 
-// 1 Hora
+// ******************************   1 Hora
 const timeCheckBlacklistTokens = 1000 * 60 * 60;
 setInterval(() => {
 
