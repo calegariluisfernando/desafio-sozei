@@ -29,7 +29,6 @@ class AuthController {
 
     async logout(request: Request, response: Response) {
 
-        // Adicionar Token na Lista Negra
         const { authorization } = request.headers;
         
         if (typeof authorization !== 'undefined') {
