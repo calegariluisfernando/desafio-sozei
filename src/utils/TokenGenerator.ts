@@ -1,6 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import v4 from 'uuid';
-import { Helpers } from './Helpers';
+import { v4 } from 'uuid';
 
 interface PayloadData {
 
@@ -9,7 +8,14 @@ interface PayloadData {
     expiration?: number;
 }
 
-interface TokenInterface {
+interface TokenDataInterface {
+
+    idToken: string;
+    token: string;
+}
+
+interface TokenVerifyInterface {
+
     status: boolean;
     token?: object | string;
     message?: string;
@@ -17,23 +23,21 @@ interface TokenInterface {
 
 class TokenGenerator {
 
-    static sign(payload: PayloadData): string {
+    static sign(payload: PayloadData): TokenDataInterface {
 
         const { id, uuid, expiration } = payload;
         const hoursExpirations = expiration ? expiration : parseInt(process.env.DEFAULT_VALUE_TOKEN_EXPIRATION_TIME);
-
-        return jwt.sign({ id, uuid }, process.env.SECRET_KEY, 
-            { 
-                expiresIn: hoursExpirations * 60 * 60, 
-                jwtid: Helpers.generateMd5(`${id}${uuid}`),
-                issuer: process.env.ISSUER_TOKEN
-            }
-        );
+        const jwtid = v4();
+        const token = jwt.sign({ id, uuid }, process.env.SECRET_KEY, {  expiresIn: hoursExpirations * 60 * 60,  jwtid, issuer: process.env.ISSUER_TOKEN });
+        
+        const tokenReturn: TokenDataInterface = { idToken: jwtid, token };
+        
+        return tokenReturn;
     }
 
-    static verify(token: string): TokenInterface {
+    static verify(token: string): TokenVerifyInterface {
 
-        let tokenData: TokenInterface;
+        let tokenData: TokenVerifyInterface;
         try {
             
             // Verificar se token é valido
@@ -58,4 +62,4 @@ class TokenGenerator {
     }
 }
 
-export { TokenGenerator };
+export { TokenGenerator, TokenDataInterface, TokenVerifyInterface };

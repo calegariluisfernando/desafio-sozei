@@ -11,8 +11,6 @@ middleware.use('/', (request: Request, response: Response, next: NextFunction) =
     const { path } = request;   
     const dmzPaths = process.env.DMZ_ROUTES.split(',').map(p => p.trim());
 
-    console.log('BlackListToken:', blackListToken);
-
     if (!dmzPaths.includes(path)) {
 
         const { authorization } = request.headers;
@@ -31,7 +29,7 @@ middleware.use('/', (request: Request, response: Response, next: NextFunction) =
 
                 throw new AppError('Access denied!', 401);
             }
-        } else if (blackListToken.includes(checkedToken.token['jti'])) { 
+        } else if (blackListToken.map(t => t['idToken']).includes(checkedToken.token['jti'])) { 
 
             throw new AppError('Access denied!', 401);
         }
@@ -42,3 +40,4 @@ middleware.use('/', (request: Request, response: Response, next: NextFunction) =
 
 
 export { middleware };
+

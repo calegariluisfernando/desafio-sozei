@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
-import { blackListToken } from "../app";
+import { activeTokens, blackListToken } from "../app";
 import { AppError } from "../error/AppError";
 import { UsersRepository } from "../repositories/UsersRepository";
 import { Helpers } from "../utils/Helpers";
-import { TokenGenerator } from "../utils/TokenGenerator";
+import { TokenDataInterface, TokenGenerator } from "../utils/TokenGenerator";
 
 class AuthController {
 
@@ -20,9 +20,11 @@ class AuthController {
         }
 
         const { id, uuid } = user;
-        const token = TokenGenerator.sign({ id, uuid });
+        const dadosToken: TokenDataInterface = TokenGenerator.sign({ id, uuid });
+        
+        activeTokens.push({ idToken: dadosToken['idToken'], token: dadosToken['token'] });
 
-        return response.json({ token });       
+        return response.json({ token: dadosToken['token'] });       
     }
 
     async logout(request: Request, response: Response) {
@@ -36,9 +38,9 @@ class AuthController {
             const tokenDecoded  = TokenGenerator.verify(token);
             const tokenId       = tokenDecoded.token['jti'];
 
-            if (!blackListToken.includes(tokenId)) {
+            if (!blackListToken.map(t => t['idToken']).includes(tokenId)) {
 
-                blackListToken.push(tokenId);
+                blackListToken.push({ idToken: tokenDecoded.token['jti'], token });
             }
         }
 
@@ -47,3 +49,4 @@ class AuthController {
 }
 
 export { AuthController };
+
